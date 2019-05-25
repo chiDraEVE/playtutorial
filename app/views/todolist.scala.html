@@ -1,0 +1,39 @@
+@(tasks: List[Task])
+
+@main("ToDo-Liste") {
+    <section id="top">
+        <div class="wrapper">
+            <h1>ToDo-Liste</h1>
+        </div>
+    </section>
+
+    <div>
+        <form action="@routes.TaskController.newTask()" method="post">
+            <input type="text" name="taskName" placeholder="Aufgabe hinzufügen" required>
+            <input type="submit">
+        </form>
+    </div>
+    <div>
+        <ul>
+            @tasks.map { task =>
+                <li>
+                    @task.name
+                    <button onclick="deleteTask(@task.id)">Entfernen</button>
+                </li>
+            }
+        </ul>
+    </div>
+
+    <script>
+        function deleteTask(id) {
+            var req = new XMLHttpRequest();
+            req.open("delete", "/tasks/" + id);
+            req.onload = function (e) {
+                if ( req.status == 200 ) {
+                    document.location.reload(true);
+                } else { console.log(e)}
+            };
+            req.send();
+        }
+    </script>
+}
